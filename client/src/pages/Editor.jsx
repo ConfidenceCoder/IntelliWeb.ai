@@ -8,7 +8,9 @@ import { ArrowLeft, Code, Code2, MessageCircle, MessageSquare, Monitor, Rocket, 
 import { useRef } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
-import Editor from '@monaco-editor/react';
+import { lazy, Suspense } from "react";
+
+const Editor = lazy(() => import('@monaco-editor/react'));
 function WebsiteEditor() {
     const { id } = useParams()
     const [website, setWebsite] = useState(null)
@@ -231,24 +233,36 @@ function WebsiteEditor() {
 
             <AnimatePresence>
                 {showCode && (
-                    <motion.div
-                        initial={{ x: "100%" }}
-                        animate={{ x: 0 }}
-                        exit={{ x: "100%" }}
-                        className="fixed inset-y-0 right-0 w-full lg:w-[45%] z-[9999] bg-[#1e1e1e] flex flex-col"
-                    >
-                        <div className='h-12 px-4 flex justify-between items-center border-b border-white/10 bg-[#1e1e1e]'>
-                            <span className='text-sm font-medium'>index.html</span>
-                            <button onClick={() => setShowCode(false)}><X size={18} /></button>
-                        </div>
-                        <Editor
-                            theme='vs-dark'
-                            value={code}
-                            language='html'
-                            onChange={(v) => setCode(v)}
-                        />
+                   <motion.div
+    initial={{ x: "100%" }}
+    animate={{ x: 0 }}
+    exit={{ x: "100%" }}
+    className="fixed inset-y-0 right-0 w-full lg:w-[45%] z-[9999] bg-[#1e1e1e] flex flex-col"
+>
+    <div className='h-12 px-4 flex justify-between items-center border-b border-white/10 bg-[#1e1e1e]'>
+        <span className='text-sm font-medium'>index.html</span>
+        <button onClick={() => setShowCode(false)}><X size={18} /></button>
+    </div>
 
-                    </motion.div>
+    
+    <Suspense fallback={
+        <div className="flex-1 flex items-center justify-center bg-[#1e1e1e] text-gray-400">
+            <div className="flex flex-col items-center gap-3">
+                <div className="animate-spin w-8 h-8 border-4 border-white/20 border-t-white rounded-full"></div>
+                <p className="text-sm">Loading AI Editor...</p>
+            </div>
+        </div>
+    }>
+        <Editor
+            theme='vs-dark'
+            value={code}
+            language='html'
+            onChange={(v) => setCode(v)}
+            height="100%"          {/* ← Yeh bhi add kar diya (important hai) */}
+            width="100%"
+        />
+    </Suspense>
+</motion.div>
                 )}
             </AnimatePresence>
 
