@@ -244,7 +244,6 @@ function WebsiteEditor() {
         <button onClick={() => setShowCode(false)}><X size={18} /></button>
     </div>
 
-    
     <Suspense fallback={
         <div className="flex-1 flex items-center justify-center bg-[#1e1e1e] text-gray-400">
             <div className="flex flex-col items-center gap-3">
@@ -258,7 +257,7 @@ function WebsiteEditor() {
             value={code}
             language='html'
             onChange={(v) => setCode(v)}
-            height="100%"          {/* ← Yeh bhi add kar diya (important hai) */}
+            height="100%"
             width="100%"
         />
     </Suspense>
